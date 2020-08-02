@@ -8,7 +8,7 @@ from subprocess import CalledProcessError, run
 
 import git
 
-from .decrypted_temporary_file import DecryptedTemporaryFile
+from .secret import Secret
 
 
 class Store:
@@ -20,6 +20,7 @@ class Store:
         self._repo = git.Repo(self._repo_path)
         self._secrects_path = self._repo_path / 'keys.asc'
         self._user_keys_path = self._repo_path / 'user-keys'
+        self._secret = Secret(self._secrects_path, self._user_keys_path)
 
     @property
     def name(self):
@@ -28,10 +29,6 @@ class Store:
     @property
     def path(self):
         return self._repo_path
-
-    @property
-    def user_keys(self):
-        return self._user_keys_path.glob('*.pubkey')
 
     def _get_remote(self):
         self._repo.remotes.origin.pull()
@@ -57,20 +54,20 @@ class Store:
     def edit(self):
         self._get_remote()
 
-        with DecryptedTemporaryFile(self._secrects_path) as dtf:
+        with self._secret.decrypted as clear_file:
             try:
-                run([self.EDITOR, dtf], check=True)
+                run([self.EDITOR, clear_file], check=True)
             except CalledProcessError:
-                pass  # TODO: Log something?
-            else:
-                if dtf.modified:
-                    dtf.encrypt(user_keys=self.user_keys)
-                    self._put_remote()
+                return  # TODO: Log something?
+
+        # if self._secret.modified:
+        #    self._secret.encrypt(user_keys=self.user_keys)
+        self._put_remote()
 
     def show(self):
         self._get_remote()
-        with DecryptedTemporaryFile(self._secrects_path) as dtf:
-            run(['less', dtf], check=True)
+        with self._secret.decrypted as clear_file:
+            run(['less', clear_file], check=True)
 
     @classmethod
     def clone(cls, url, path):
@@ -82,7 +79,6 @@ class Store:
         '''
         self._user_keys_path.mkdir(parents=True, exist_ok=True)
         copy2(public_key_path, self._user_keys_path)
-        DecryptedTemporaryFile(self._secrects_path).initialize(
-            user_keys=self.user_keys)
+        self._secret.initialize() # ser_keys=self.user_keys)
         self._put_remote(users=f'Add user {public_key_path.stem}.')
         self._put_remote(keys='Add empty key file.')
