@@ -11,8 +11,6 @@ import gnupg
 class DecryptedTemporaryFile:
     def __init__(self, encrypted_path):
         self._encrypted_path = encrypted_path
-        self._in_gpg = gnupg.GPG(use_agent=True, verbose=True)
-        self._out_gpg = gnupg.GPG(use_agent=True, gnupghome='.', verbose=True)
         self._file = None
         self._original = None
 
@@ -30,14 +28,16 @@ class DecryptedTemporaryFile:
     def _decrypt(self):
         self._file = NamedTemporaryFile(mode='w+b', suffix='.txt', delete=True)
         with open(self._encrypted_path, 'rb') as encrypted_file:
-            self._in_gpg.decrypt_file(encrypted_file, output=self)
+            gpg = gnupg.GPG(use_agent=True, verbose=True)
+            gpg.decrypt_file(encrypted_file, output=self)
             self._original = self._latest
 
     def encrypt(self, user_keys):
+        gpg = gnupg.GPG(use_agent=True, gnupghome='.', verbose=True)
         for key_file in user_keys:
-            self._out_gpg.import_keys(open(key_file).read())
-        recipients = [k['uids'][0] for k in self._out_gpg.list_keys()]
-        self._out_gpg.encrypt(
+            gpg.import_keys(open(key_file).read())
+        recipients = [k['uids'][0] for k in gpg.list_keys()]
+        gpg.encrypt(
             self._latest, recipients=recipients,
             output=self._encrypted_path,
             always_trust=True,
