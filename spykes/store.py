@@ -3,11 +3,12 @@ This module contains key storing capabilities.
 '''
 
 from os import environ as env
+from shutil import copy2
 from subprocess import CalledProcessError, run
 
 import git
 
-from spykes.decrypted_temporary_file import DecryptedTemporaryFile
+from .decrypted_temporary_file import DecryptedTemporaryFile
 
 
 class Store:
@@ -15,17 +16,46 @@ class Store:
 
     def __init__(self, path, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._repo_path = path
+        self._repo_path = path.resolve()
         self._repo = git.Repo(self._repo_path)
         self._keys_path = self._repo_path / 'keys.asc'
         self._recipients_path = self._repo_path / 'encrypt-to-users'
 
     @property
+    def name(self):
+        return self._repo_path.stem
+
+    @property
+    def path(self):
+        return self._repo_path
+
+    @property
     def recipients(self):
         return [r.strip() for r in open(self._recipients_path).readlines()]
 
-    def edit(self):
+    def _get_remote(self):
         self._repo.remotes.origin.pull()
+
+    def _put_remote(self, users=None, keys=None):
+        if users:
+            self._repo.index.add([self._recipients_path.as_posix()])
+            self._repo.index.commit(message=users)
+
+        if keys:
+            self._repo.index.add([self._keys_path.as_posix()])
+            self._repo.index.commit(message=keys)
+
+        if not any([users, keys]):
+            self._repo.index.add([
+                self._recipients_path.as_posix(),
+                self._keys_path.as_posix(),
+            ])
+            self._repo.index.commit()
+
+        self._repo.remotes.origin.push()
+
+    def edit(self):
+        self._get_remote()
 
         with DecryptedTemporaryFile(self._keys_path) as dtf:
             try:
@@ -35,10 +65,24 @@ class Store:
             else:
                 if dtf.modified:
                     dtf.encrypt(recipients=self.recipients)
-                    self._repo.index.add([self._keys_path.as_posix()])
-                    # TODO: commit & push
+                    self._put_remote()
 
     def show(self):
-        self._repo.remotes.origin.pull()
+        self._get_remote()
         with DecryptedTemporaryFile(self._keys_path) as dtf:
             run(['less', dtf], check=True)
+
+    @classmethod
+    def clone(cls, url, path):
+        git.Repo.clone_from(url=url, to_path=path)
+        return cls(path=path)
+
+    def initialize(self, public_key_path):
+        ''' Initialize an empty store with an empty key file and own pubkey.
+        '''
+        self._recipients_path.mkdir(parents=True, exist_ok=True)
+        copy2(public_key_path, self._recipients_path)
+        DecryptedTemporaryFile(self._keys_path).initialize(
+            recipients=self.recipients)
+        self._put_remote(users=f'Add user {public_key_path.stem}.')
+        self._put_remote(keys='Add empty key file.')
