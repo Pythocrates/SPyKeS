@@ -54,3 +54,9 @@ class DecryptedTemporaryFile:
     @property
     def modified(self):
         return self._original != self._latest
+
+    def initialize(self, recipients):
+        self._file = NamedTemporaryFile(mode='w+b', suffix='.txt', delete=True)
+        self._encrypt(recipients=recipients)
+        self._file.close()
+        self._file = None
