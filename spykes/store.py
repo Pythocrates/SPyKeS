@@ -47,7 +47,7 @@ class Store:
                 self._user_keys_path.as_posix(),
                 self._secrects_path.as_posix(),
             ])
-            run(['git', 'commit'], cwd=self._repo_path)
+            run(['git', 'commit'], cwd=self._repo_path, check=True)
 
         self._repo.remotes.origin.push()
 
@@ -60,8 +60,6 @@ class Store:
             except CalledProcessError:
                 return  # TODO: Log something?
 
-        # if self._secret.modified:
-        #    self._secret.encrypt(user_keys=self.user_keys)
         self._put_remote()
 
     def show(self):
@@ -79,6 +77,6 @@ class Store:
         '''
         self._user_keys_path.mkdir(parents=True, exist_ok=True)
         copy2(public_key_path, self._user_keys_path)
-        self._secret.initialize() # ser_keys=self.user_keys)
+        self._secret.initialize()
         self._put_remote(users=f'Add user {public_key_path.stem}.')
         self._put_remote(keys='Add empty key file.')
