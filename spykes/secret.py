@@ -64,3 +64,7 @@ class Secret:
 
     def initialize(self):
         self._encrypt()
+
+    def list_users(self):
+        for key_path in self._user_keys:
+            print(key_path.stem)

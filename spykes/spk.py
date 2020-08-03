@@ -15,8 +15,8 @@ def _parse_args():
     subparsers = parser.add_subparsers(dest='subparser_name')
     subparsers.add_parser('edit')
     subparsers.add_parser('show')
-    subparsers.add_parser('add-pubkey')
-    subparsers.add_parser('list-pubkey')
+    subparsers.add_parser('add-user')
+    subparsers.add_parser('list-users')
 
     asp = subparsers.add_parser('add-store')
     asp.add_argument('name')
@@ -40,7 +40,7 @@ def main():
     manager = StoreManager(Path.home() / '.config' / 'spykes')
     if args.subparser_name in ['add-store', 'select-store', 'list-stores']:
         func = getattr(manager, args.subparser_name.replace('-', '_'))
-    elif args.subparser_name in ['edit', 'show', 'add-pubkey']:
+    elif args.subparser_name in ['edit', 'show', 'add-user', 'list-users']:
         store = manager.current_store
         func = getattr(store, args.subparser_name.replace('-', '_'))
     else:

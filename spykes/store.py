@@ -81,3 +81,6 @@ class Store:
         self._secret.initialize()
         self._put_remote(users=f'Add user {public_key_path.stem}.')
         self._put_remote(keys='Add empty key file.')
+
+    def list_users(self):
+        self._secret.list_users()
