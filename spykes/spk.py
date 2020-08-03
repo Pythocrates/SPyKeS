@@ -15,7 +15,11 @@ def _parse_args():
     subparsers = parser.add_subparsers(dest='subparser_name')
     subparsers.add_parser('edit')
     subparsers.add_parser('show')
-    subparsers.add_parser('add-user')
+    aup = subparsers.add_parser('add-user')
+    aup.add_argument(
+        'public_key', type=Path, metavar='public-key',
+        help='the public key for the new user',
+    )
     subparsers.add_parser('list-users')
 
     asp = subparsers.add_parser('add-store')

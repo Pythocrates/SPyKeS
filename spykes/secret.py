@@ -25,6 +25,9 @@ class Secret:
     def _user_keys(self):
         return self._user_keys_path.glob('*.pubkey')
 
+    def force_encryption(self):
+        self._original = None
+
     @property
     @contextmanager
     def decrypted(self):
