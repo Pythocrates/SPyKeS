@@ -18,9 +18,10 @@ class Store:
         super().__init__(*args, **kwargs)
         self._repo_path = path.resolve()
         self._repo = git.Repo(self._repo_path)
-        self._secrects_path = self._repo_path / 'keys.asc'
         self._user_keys_path = self._repo_path / 'user-keys'
-        self._secret = Secret(self._secrects_path, self._user_keys_path)
+        self._secret = Secret(
+            self._repo_path / 'keys.asc',
+            self._user_keys_path)
 
     @property
     def name(self):
@@ -39,13 +40,13 @@ class Store:
             self._repo.index.commit(message=users)
 
         if keys:
-            self._repo.index.add([self._secrects_path.as_posix()])
+            self._repo.index.add([self._secret.path.as_posix()])
             self._repo.index.commit(message=keys)
 
         if not any([users, keys]):
             self._repo.index.add([
                 self._user_keys_path.as_posix(),
-                self._secrects_path.as_posix(),
+                self._secret.path.as_posix(),
             ])
             run(['git', 'commit'], cwd=self._repo_path, check=True)
 
