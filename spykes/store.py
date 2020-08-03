@@ -77,10 +77,16 @@ class Store:
         ''' Initialize an empty store with an empty key file and own pubkey.
         '''
         self._user_keys_path.mkdir(parents=True, exist_ok=True)
-        copy2(public_key_path, self._user_keys_path)
+        self.add_user(public_key_path, reencrypt=False)
         self._secret.initialize()
-        self._put_remote(users=f'Add user {public_key_path.stem}.')
         self._put_remote(keys='Add empty key file.')
 
     def list_users(self):
         self._secret.list_users()
+
+    def add_user(self, public_key, reencrypt=True):
+        copy2(public_key, self._user_keys_path)
+        self._put_remote(users=f'Add user {public_key.stem}.')
+        if reencrypt:
+            with self._secret.decrypted:
+                self._secret.force_encryption()
