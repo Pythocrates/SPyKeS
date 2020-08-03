@@ -4,21 +4,22 @@ This module provides decryption and encryption functions for a temporary file.
 
 from contextlib import contextmanager
 from os import urandom
-from tempfile import NamedTemporaryFile
+from pathlib import Path
+from tempfile import NamedTemporaryFile, TemporaryDirectory
 
 import gnupg
 
 
 class Secret:
-    def __init__(self, encrypted_path, user_keys_path):
-        self._encrypted_path = encrypted_path
+    def __init__(self, path, user_keys_path):
+        self._path = path
         self._user_keys_path = user_keys_path
-        self._file = None
         self._original = None
         self._latest = ''
 
-    def __fspath__(self):
-        return self._file.name
+    @property
+    def path(self):
+        return self._path
 
     @property
     def _user_keys(self):
@@ -27,49 +28,39 @@ class Secret:
     @property
     @contextmanager
     def decrypted(self):
-        self._decrypt()
-        yield self
-        self._latest = self.__read()
-        self._shred()
+        with NamedTemporaryFile(mode='w+b', suffix='.txt', delete=True) as cf:
+            self._decrypt(target=cf)
+            yield cf.name
+            self._shred(target=cf)
 
-        if self._modified:
+        if self._original != self._latest:
             self._encrypt()
 
-    def _decrypt(self):
-        self._file = NamedTemporaryFile(mode='w+b', suffix='.txt', delete=True)
-        with open(self._encrypted_path, 'rb') as encrypted_file:
+    def _decrypt(self, target):
+        with open(self._path, 'rb') as encrypted_file:
             gpg = gnupg.GPG(use_agent=True, verbose=True)
-            gpg.decrypt_file(encrypted_file, output=self)
-            self._original = self.__read()
+            gpg.decrypt_file(encrypted_file, output=target.name)
+            self._original = open(target.name).read()
 
-    def _encrypt(self):  # , user_keys):
-        gpg = gnupg.GPG(use_agent=True, gnupghome='.', verbose=True)
-        for key_file in self._user_keys:
-            gpg.import_keys(open(key_file).read())
-        recipients = [k['uids'][0] for k in gpg.list_keys()]
-        gpg.encrypt(
-            self._latest, recipients=recipients,
-            output=self._encrypted_path,
-            always_trust=True,
-        )
+    def _encrypt(self):
+        with TemporaryDirectory() as temp_dir:
+            gpg = gnupg.GPG(use_agent=True, gnupghome=temp_dir, verbose=True)
+            for key_file in self._user_keys:
+                gpg.import_keys(open(key_file).read())
+            recipients = [k['uids'][0] for k in gpg.list_keys()]
+            gpg.encrypt(
+                self._latest, recipients=recipients,
+                output=self._path,
+                always_trust=True,
+            )
 
-    def _shred(self):
-        length = self._file.tell()
+    def _shred(self, target):
+        self._latest = open(target.name).read()
+        length = Path(target.name).stat().st_size
         for _ in range(length):
-            self._file.seek(0)
-            self._file.write(urandom(length))
-            self._file.flush()
-
-        self._file.close()
-        self._file = None
-
-    def __read(self):
-        self._file.seek(0)
-        return self._file.read()
-
-    @property
-    def _modified(self):
-        return self._original != self._latest
+            target.seek(0)
+            target.write(urandom(length))
+            target.flush()
 
     def initialize(self):
         self._encrypt()
