@@ -4,6 +4,7 @@
 '''
 
 from pathlib import Path
+import sys
 
 from spykes.parsing import _parse_args
 from spykes.store_manager import StoreManager
@@ -19,7 +20,7 @@ def main():
         store = manager.current_store
         func = getattr(store, args.subparser_name.replace('-', '_'))
     else:
-        raise Exception(f'Unhandled subparser {args.subparser_name}.')
+        sys.exit(1)
 
     args = vars(args)
     del args['subparser_name']
