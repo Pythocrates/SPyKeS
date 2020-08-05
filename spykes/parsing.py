@@ -32,4 +32,8 @@ def _parse_args():
 
     subparsers.add_parser('list-stores')
 
-    return parser.parse_args()
+    args = parser.parse_args()
+    if not args.subparser_name:
+        parser.print_help()
+
+    return args
