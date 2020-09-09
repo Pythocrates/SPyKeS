@@ -15,7 +15,8 @@ class Secret:
         self._path = path
         self._user_keys_path = user_keys_path
         self._original = None
-        self._latest = ''
+        self._latest = None
+        self._changed = False
 
     @property
     def path(self):
@@ -29,14 +30,19 @@ class Secret:
         self._original = None
 
     @property
+    def changed(self):
+        return self._original != self._latest
+
+    @property
     @contextmanager
     def decrypted(self):
-        with NamedTemporaryFile(mode='w+b', suffix='.txt', delete=True) as cf:
-            self._decrypt(target=cf)
-            yield cf.name
-            self._shred(target=cf)
+        self._changed = False
+        with NamedTemporaryFile(mode='w+b', suffix='.txt', delete=True) as _cf:
+            self._decrypt(target=_cf)
+            yield _cf.name
+            self._shred(target=_cf)
 
-        if self._original != self._latest:
+        if self.changed:
             self._encrypt()
 
     def _decrypt(self, target):

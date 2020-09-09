@@ -61,7 +61,8 @@ class Store:
             except CalledProcessError:
                 return  # TODO: Log something?
 
-        self._put_remote()
+        if self._secret.changed:
+            self._put_remote()
 
     def show(self):
         self._get_remote()
