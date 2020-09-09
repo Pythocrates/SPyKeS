@@ -1,3 +1,4 @@
+![Python package](https://github.com/Pythocrates/SPyKeS/workflows/Python%20package/badge.svg)
 # SPyKeS
 Simple Python Key Store
 
