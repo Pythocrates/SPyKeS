@@ -51,6 +51,14 @@ jobs:
           name: codecov-umbrella # optional
           fail_ci_if_error: true # optional (default = false)
 
+    - name: Test & publish code coverage to code climate
+      uses: paambaati/codeclimate-action@v2.6.0
+      env:
+        CC_TEST_REPORTER_ID: <code_climate_reporter_id>
+      with:
+        coverageCommand: pytest test --cov=spykes --cov-report xml:coverage.xml --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml --html=report-${{ matrix.python-version }}.html
+        debug: true
+
           #- name: Upload pytest test results
           #uses: actions/upload-artifact@v2
           #with:
