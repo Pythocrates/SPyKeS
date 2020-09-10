@@ -54,7 +54,7 @@ jobs:
     - name: Test & publish code coverage to code climate
       uses: paambaati/codeclimate-action@v2.6.0
       env:
-        CC_TEST_REPORTER_ID: <code_climate_reporter_id>
+        CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_TEST_REPORTER_ID }}
       with:
         coverageCommand: pytest test --cov=spykes --cov-report xml:coverage.xml --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml --html=report-${{ matrix.python-version }}.html
         debug: true
