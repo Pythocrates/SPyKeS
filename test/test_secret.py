@@ -29,7 +29,10 @@ class TestSecret:
         secret = Secret(path=path_1, user_keys_path=path_2)
         secret.list_users()
         captured = capsys.readouterr()
-        assert captured.out == "test_1\ntest_2\n"
+        assert captured.out in {
+            "test_1\ntest_2\n",
+            "test_2\ntest_1\n",
+        }
 
     def test_initialize(self, mock_gpg):
         path_1 = Path('test/data/test_encrypted')
