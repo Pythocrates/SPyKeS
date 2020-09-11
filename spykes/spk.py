@@ -4,7 +4,6 @@
 '''
 
 from pathlib import Path
-import sys
 
 from spykes.parsing import _parse_args
 from spykes.store_manager import StoreManager
@@ -19,13 +18,7 @@ def main():
     elif args.subparser_name in ['edit', 'show', 'add-user', 'list-users']:
         store = manager.current_store
         func = getattr(store, args.subparser_name.replace('-', '_'))
-    else:
-        sys.exit(1)
 
     args = vars(args)
     del args['subparser_name']
     func(**args)
-
-
-if __name__ == '__main__':
-    main()
