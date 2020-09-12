@@ -8,16 +8,18 @@ from spykes.spk import main
 
 
 class TestMain:
-    def test_list_stores(self):
-        with mock.patch('spykes.spk.StoreManager') as sm:
-            sm.current_store = mock.PropertyMock()
+    @staticmethod
+    def test_list_stores():
+        with mock.patch('spykes.spk.StoreManager') as sm_mock:
+            sm_mock.current_store = mock.PropertyMock()
             sys.argv = ['X', 'list-stores']
             main()
-            assert sm.called
+            assert sm_mock.called
 
-    def test_edit(self):
-        with mock.patch('spykes.spk.StoreManager') as sm:
-            sm.current_store = mock.PropertyMock()
+    @staticmethod
+    def test_edit():
+        with mock.patch('spykes.spk.StoreManager') as sm_mock:
+            sm_mock.current_store = mock.PropertyMock()
             sys.argv = ['X', 'edit']
             main()
-            assert sm.called
+            assert sm_mock.called
