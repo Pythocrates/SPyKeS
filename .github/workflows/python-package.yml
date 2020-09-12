@@ -59,19 +59,14 @@ jobs:
         coverageCommand: pytest test --cov=spykes --cov-report xml:coverage.xml --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml --html=report-${{ matrix.python-version }}.html
         debug: true
 
-# Testing coveralls.io
-    - name: Coveralls GitHub Action
-      uses: coverallsapp/github-action@v1.1.2
+# Testing coveralls.io -> no support for python-coverage
+#    - name: Coveralls GitHub Action
+#      uses: coverallsapp/github-action@v1.1.2
+#      with:
+#        github-token: ${{ secrets.COVERALLS_TOKEN }}
+
+# Testing coveralls python
+    - name: Coveralls Python
+      uses: AndreMiras/coveralls-python-action@v20200413
       with:
         github-token: ${{ secrets.COVERALLS_TOKEN }}
-      
-
-          #- name: Upload pytest test results
-          #uses: actions/upload-artifact@v2
-          #with:
-          #    name: pytest-results-${{ matrix.python-version }}
-          #    path: |
-          #      junit/test-results-${{ matrix.python-version }}.xml
-          #      report-${{ matrix.python-version }}.html
-          #    # Use always() to always run this step to publish test results when there are test failures
-          #if: ${{ always() }}
