@@ -67,7 +67,8 @@ jobs:
 
 # Testing coveralls python
     - name: Coveralls Python
-      uses: AndreMiras/coveralls-python-action@v20200413
+      run: pytest test --cov=spykes
+    - uses: AndreMiras/coveralls-python-action@v20200413
       with:
         github-token: ${{ secrets.COVERALLS_TOKEN }}
         debug: true
