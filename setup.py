@@ -10,6 +10,8 @@ setup(
     author_email='23015037+Pythocrates@users.noreply.github.com',
     url='https://github.com/Pythocrates/SPyKeS',
     description=__doc__,
+    long_description=open('README.md').read(),
+    long_description_content_type="text/markdown",
 
     use_scm_version=True,
     setup_requires=['setuptools_scm>=3.3.3'],
