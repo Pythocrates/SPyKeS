@@ -62,8 +62,8 @@ jobs:
 # Testing coveralls.io
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v1.1.2
-
-    
+      github-token: ${{ secrets.COVERALLS_TOKEN }}
+      
 
           #- name: Upload pytest test results
           #uses: actions/upload-artifact@v2
