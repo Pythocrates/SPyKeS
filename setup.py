@@ -1,6 +1,4 @@
-'''
-This is the SPyKeS package. It provides simple key storage capabilities.
-'''
+'''This is the SPyKeS package. It provides simple key storage capabilities.'''
 
 from setuptools import find_packages, setup
 
