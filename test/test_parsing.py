@@ -3,19 +3,19 @@
 
 import sys
 
-import pytest
-
 from spykes.parsing import _parse_args
 
 
 class TestParsing:
-    def test_edit(self):
+    @staticmethod
+    def test_edit():
         sys.argv = ['X', 'edit']
         args = _parse_args()
         assert vars(args) == {'subparser_name': 'edit'}
 
-    def test_no_args(self, capsys):
+    @staticmethod
+    def test_no_args(capsys):
         sys.argv = ['X']
-        args = _parse_args()
+        _parse_args()
         captured = capsys.readouterr()
         assert captured.out.startswith('usage:')
