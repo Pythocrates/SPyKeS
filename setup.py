@@ -18,6 +18,9 @@ setup(
         'GitPython>=3.1.7',
         'python-gnupg>=0.4.6',
     ],
+    tests_require=[
+        'pytest>=6.0.1',
+    ],
 
     entry_points={
         'console_scripts': ['spk = spykes.spk:main']
