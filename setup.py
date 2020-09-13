@@ -24,8 +24,10 @@ setup(
     },
 
     classifiers=[
-        'Programming Language :: Python :: 3',
-        'License :: MIT',
-        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: POSIX :: Linux',
     ],
 )
