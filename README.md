@@ -29,6 +29,9 @@ Some badges provided by shields.io
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Pythocrates/SPyKeS?style=plastic)
 ![GitHub top language](https://img.shields.io/github/languages/top/Pythocrates/SPyKeS?style=plastic)
 
+![Scrutinizer code quality (GitHub/Bitbucket)](https://img.shields.io/scrutinizer/quality/g/Pythocrates/SPyKeS)
+![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/Pythocrates/SPyKeS?style=plastic)
+
 ![Code Climate technical debt](https://img.shields.io/codeclimate/tech-debt/Pythocrates/SPyKeS?style=plastic)
 ![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability-percentage/Pythocrates/SPyKeS?style=plastic)
 ![Code Climate issues](https://img.shields.io/codeclimate/issues/Pythocrates/SPyKeS?style=plastic)
