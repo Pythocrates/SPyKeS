@@ -38,6 +38,8 @@ Some badges provided by shields.io
 ![Libraries.io SourceRank](https://img.shields.io/librariesio/sourcerank/pypi/spykeys?style=plastic)
 ![Requires.io](https://img.shields.io/requires/github/Pythocrates/SPyKeS?style=plastic)
 
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=Pythocrates_SPyKeS&metric=code_smells)](https://sonarcloud.io/dashboard?id=Pythocrates_SPyKeS)
+
 
 # SPyKeS
 Simple Python Key Store
