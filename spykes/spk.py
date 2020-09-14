@@ -13,12 +13,12 @@ def main():
     args = _parse_args()
     manager = StoreManager(Path.home() / '.config' / 'spykes')
 
-    if args.subparser_name in ['add-store', 'select-store', 'list-stores']:
-        func = getattr(manager, args.subparser_name.replace('-', '_'))
-    elif args.subparser_name in ['edit', 'show', 'add-user', 'list-users']:
+    if args.subcmd in ['add-store', 'select-store', 'list-stores']:
+        func = getattr(manager, args.subcmd.replace('-', '_'))
+    elif args.subcmd in ['edit', 'show', 'add-user', 'list-users']:
         store = manager.current_store
-        func = getattr(store, args.subparser_name.replace('-', '_'))
+        func = getattr(store, args.subcmd.replace('-', '_'))
 
     args = vars(args)
-    del args['subparser_name']
+    del args['subcmd']
     func(**args)

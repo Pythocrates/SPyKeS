@@ -8,7 +8,7 @@ from pathlib import Path
 def _parse_args():
     parser = ArgumentParser()
 
-    subparsers = parser.add_subparsers(dest='subparser_name')
+    subparsers = parser.add_subparsers(dest='subcmd')
     subparsers.add_parser('edit')
     subparsers.add_parser('show')
     aup = subparsers.add_parser('add-user')
@@ -31,9 +31,6 @@ def _parse_args():
     ssp.add_argument('name')
 
     subparsers.add_parser('list-stores')
+    subparsers.required = True
 
-    args = parser.parse_args()
-    if not args.subparser_name:
-        parser.print_help()
-
-    return args
+    return parser.parse_args()
