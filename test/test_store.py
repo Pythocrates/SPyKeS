@@ -27,19 +27,19 @@ def mock_run():
         yield
 
 
+REPO_PATH = Path('/my/store/path')
+
+
 class TestStore:
     def test_name(self, mock_repo):
-        repo_path = Path('/my/store/path')
-        store = Store(path=repo_path)
+        store = Store(path=REPO_PATH)
         assert store.name == 'path'
 
     def test_path(self, mock_repo):
-        repo_path = Path('/my/store/path')
-        store = Store(path=repo_path)
-        assert store.path == repo_path
+        store = Store(path=REPO_PATH)
+        assert store.path == REPO_PATH
 
     def test_edit(self, mock_repo, mock_run):
-        with mock.patch('spykes.store.Secret') as secret:
-            repo_path = Path('/my/store/path')
-            store = Store(path=repo_path)
+        with mock.patch('spykes.store.Secret'):
+            store = Store(path=REPO_PATH)
             store.edit()
