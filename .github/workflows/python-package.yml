@@ -15,14 +15,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.11, 3.12]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
@@ -35,6 +35,9 @@ jobs:
           elif [ -f setup.py ]
           then
             pip install .
+          elif [ -f pyproject.toml ]
+          then
+            pip install .
           fi
       - name: Lint with flake8
         run: |
@@ -44,7 +47,7 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Test with pytest
         run: pytest test --cov=spykes --cov-report xml:coverage.xml --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml --html=report-${{ matrix.python-version }}.html
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v4
         with:
           # token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
           file: ./coverage.xml
@@ -68,7 +71,7 @@ jobs:
       # Testing coveralls python
       - name: Coveralls Python
         run: pytest test --cov=spykes
-      - uses: AndreMiras/coveralls-python-action@v20200413
+      - uses: AndreMiras/coveralls-python-action@v20201129
         with:
           github-token: ${{ secrets.COVERALLS_TOKEN }}
           debug: true
