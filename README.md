@@ -1,4 +1,9 @@
-Testing some badges provided by different services:
+# SPyKeS
+Simple Python Key Store
+
+SPyKeS is a simple Python implementation of https://github.com/42ways/simple-keystore.
+
+## Testing some badges provided by different services
 
 ![Python package](https://github.com/Pythocrates/SPyKeS/workflows/Python%20package/badge.svg)
 [![codecov](https://codecov.io/gh/Pythocrates/SPyKeS/branch/master/graph/badge.svg)](https://codecov.io/gh/Pythocrates/SPyKeS)
@@ -42,9 +47,3 @@ Some badges provided by shields.io
 ![Requires.io](https://img.shields.io/requires/github/Pythocrates/SPyKeS?style=plastic)
 
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=Pythocrates_SPyKeS&metric=code_smells)](https://sonarcloud.io/dashboard?id=Pythocrates_SPyKeS)
-
-
-# SPyKeS
-Simple Python Key Store
-
-SPyKeS is a simple Python implementation of https://github.com/42ways/simple-keystore.

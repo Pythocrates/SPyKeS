@@ -1,5 +1,6 @@
-''' This tests the Secret class.
-'''
+"""
+This tests the Secret class.
+"""
 
 from pathlib import Path
 from unittest import mock
@@ -9,27 +10,27 @@ from pytest import fixture
 from spykes.secret import Secret
 
 
-@fixture(scope='class')
+@fixture(scope="class")
 def mock_gpg():
-    with mock.patch('gnupg.GPG'):
+    with mock.patch("gnupg.GPG"):
         yield
 
 
-ENCRYPTED_PATH = Path('test/data/test_encrypted')
-DATA_PATH = Path('test/data')
+ENCRYPTED_PATH = Path("test/data/test_encrypted")
+DATA_PATH = Path("test/data")
 
 
 class TestSecret:
     @staticmethod
     def test_path():
-        path_1 = Path('/my/path')
-        path_2 = Path('/my/path/2')
+        path_1 = Path("/my/path")
+        path_2 = Path("/my/path/2")
         secret = Secret(path=path_1, user_keys_path=path_2)
         assert secret.path == path_1
 
     @staticmethod
     def test_list_keys(capsys):
-        path_1 = Path('/my/path')
+        path_1 = Path("/my/path")
         secret = Secret(path=path_1, user_keys_path=DATA_PATH)
         secret.list_users()
         captured = capsys.readouterr()
@@ -48,8 +49,8 @@ class TestSecret:
         secret = Secret(path=ENCRYPTED_PATH, user_keys_path=DATA_PATH)
 
         with secret.decrypted as decrypted_path:
-            with open(decrypted_path, 'w') as decrypted_file:
-                decrypted_file.write('test')
+            with open(decrypted_path, "w") as decrypted_file:
+                decrypted_file.write("test")
 
         assert secret.changed
 
@@ -58,7 +59,7 @@ class TestSecret:
         secret = Secret(path=ENCRYPTED_PATH, user_keys_path=DATA_PATH)
 
         with secret.decrypted as decrypted_path:
-            with open(decrypted_path, 'w'):
+            with open(decrypted_path, "w"):
                 # No change in the context manager.
                 pass
 

@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools_scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+authors = [
+  {name = "Pythocrates", email = "23015037+Pythocrates@users.noreply.github.com"}
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: POSIX :: Linux"
+]
+dependencies = [
+  "GitPython>=3.1.43",
+  "python-gnupg>=0.5.2"
+]
+description = "A simple key store"
+license = {file = "LICENSE.txt"}
+name = "spykes"
+dynamic = ["version"]
+readme = "README.md"
+requires-python = ">=3.10"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.2.2"]
+
+[project.scripts]
+add-store = "spykes.spk:add_store"
+add-user = "spykes.spk:add_user"
+edit-keys = "spykes.spk:edit_keys"
+list-stores = "spykes.spk:list_stores"
+list-users = "spykes.spk:list_users"
+select-store = "spykes.spk:select_store"
+show-keys = "spykes.spk:show_keys"
+
+[project.urls]
+"Homepage" = "https://github.com/Pythocrates/SPyKeS"
+
+[tool.black]
+line-length = 120
+
+[tool.setuptools_scm]
