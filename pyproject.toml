@@ -17,7 +17,7 @@ classifiers = [
 ]
 dependencies = [
   "GitPython>=3.1.43",
-  "python-gnupg>=0.5.2"
+  "python-gnupg>=0.5.6"
 ]
 description = "A simple key store"
 license = {file = "LICENSE.txt"}
