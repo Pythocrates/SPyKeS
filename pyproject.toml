@@ -16,7 +16,7 @@ classifiers = [
   "Operating System :: POSIX :: Linux"
 ]
 dependencies = [
-  "GitPython>=3.1.43",
+  "GitPython>=3.1.46",
   "python-gnupg>=0.5.2"
 ]
 description = "A simple key store"
